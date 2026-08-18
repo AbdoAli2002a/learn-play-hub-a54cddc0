@@ -2,25 +2,25 @@ export type Sector = {
   /** size of the sector in degrees */
   deg: number;
   /** label drawn inside the sector, e.g. "129°" or "(2x − 7)°" */
-  label?: string;
+  label?: string | undefined;
   /** highlight tone */
-  tone?: "default" | "primary" | "accent" | "muted";
+  tone?: "default" | "primary" | "accent" | "muted" | undefined;
   /** draw the small square right-angle marker instead of an arc */
-  right?: boolean;
+  right?: boolean | undefined;
 };
 
 export type AngleFigureProps = {
   /** sectors going counter-clockwise, should add up to 360 */
   sectors: Sector[];
   /** angle (degrees, counter-clockwise from east) where the first ray starts */
-  start?: number;
+  start?: number | undefined;
   /** labels for the rays, in the same order as the sector boundaries */
-  rayLabels?: string[];
+  rayLabels?: string[] | undefined;
   /** label of the centre point */
-  centerLabel?: string;
-  size?: number;
-  className?: string;
-  caption?: string;
+  centerLabel?: string | undefined;
+  size?: number | undefined;
+  className?: string | undefined;
+  caption?: string | undefined;
 };
 
 const toneStroke: Record<NonNullable<Sector["tone"]>, string> = {
@@ -73,8 +73,8 @@ export function AngleFigure({
         className="mx-auto max-w-[300px]"
       >
         {sectors.map((s, i) => {
-          const a0 = bounds[i];
-          const a1 = bounds[i] + s.deg;
+          const a0 = bounds[i] ?? 0;
+          const a1 = a0 + s.deg;
           const arcR = Math.min(R * 0.42, 34 + (i % 2) * 8);
           const [x0, y0] = pt(cx, cy, arcR, a0);
           const [x1, y1] = pt(cx, cy, arcR, a1);
@@ -123,7 +123,7 @@ export function AngleFigure({
 
         {sectors.map((s, i) => {
           if (!s.label) return null;
-          const mid = bounds[i] + s.deg / 2;
+          const mid = (bounds[i] ?? 0) + s.deg / 2;
           const [x, y] = pt(cx, cy, Math.min(R * 0.72, 66), mid);
           return (
             <text
@@ -187,7 +187,7 @@ export function CrossFigure({
 }: {
   angle?: number;
   labels?: (string | undefined)[];
-  rayLabels?: string[];
+  rayLabels?: string[] | undefined;
   size?: number;
   caption?: string;
   className?: string;
